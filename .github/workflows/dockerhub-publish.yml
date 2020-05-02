@@ -8,7 +8,9 @@ jobs:
       matrix: ${{ steps.images-list.outputs.matrix }}
     steps:
     - id: images-list
-      run: echo "::set-output name=matrix::{\"images\": $(ls -d */ | cut -d/ -f1 | jq -R -s 'split("\n")[:-1]')}"
+      run: |
+        IMAGES=$(ls -d */ | cut -d/ -f1 | jq -R -s 'split("\n")[:-1]')
+        echo "::set-output name=matrix::{\"images\": $IMAGES}"
   test:
     needs: images
     runs-on: ubuntu-latest
