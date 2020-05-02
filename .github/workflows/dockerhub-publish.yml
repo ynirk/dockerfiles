@@ -7,6 +7,8 @@ jobs:
     outputs:
       matrix: ${{ steps.images-list.outputs.matrix }}
     steps:
+    - id: checkout
+      uses: actions/checkout@v2
     - id: images-list
       run: |
         IMAGES=$(ls -d */ | cut -d/ -f1 | jq -R -s 'split("\n")[:-1]')
