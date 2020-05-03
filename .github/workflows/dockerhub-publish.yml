@@ -4,19 +4,17 @@ on: push
 jobs:
   images:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.images-list.outputs.matrix }}
     steps:
-    - id: checkout
+    - name: checkout
       uses: actions/checkout@v2
-    - id: images-list
+    - name: login
+      env:
+        USER: ${{ secrets.docker_user }}
+        TOKEN: ${{ secrets.docker_token }}
       run: |
-        IMAGES=$(ls -d */ | cut -d/ -f1 | jq -R -s 'split("\n")[:-1]')
-        echo "::set-output name=matrix::{\"images\": $IMAGES}"
-  test:
-    needs: images
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.images.outputs.matrix)}}
-    steps:
-    - run: echo ${{ matrix.images }}
+        echo "login to docker"
+        docker login -u '$USER' -p '$TOKEN'
+    - name: build
+      run: |
+        echo "building docker images"
+        make build
