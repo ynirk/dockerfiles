@@ -9,11 +9,11 @@ jobs:
       uses: actions/checkout@v2
     - name: login
       env:
-        USER: ${{ secrets.docker_user }}
-        TOKEN: ${{ secrets.docker_token }}
+        DOCKER_USER: ${{ secrets.docker_user }}
+        DOCKER_TOKEN: ${{ secrets.docker_token }}
       run: |
         echo "login to docker"
-        docker login -u '$USER' -p '$TOKEN'
+        echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
     - name: build
       run: |
         echo "building docker images"
